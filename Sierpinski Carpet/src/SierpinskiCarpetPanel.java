@@ -4,12 +4,15 @@ import java.awt.Graphics2D;
 import java.awt.Panel;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.util.Random;
 import java.awt.RenderingHints;
 
 public class SierpinskiCarpetPanel extends Panel {
-	private static int maxRecursion = 9;
-	private static double squareLenght = 200;
-	private static Color[] colors = {Color.BLACK, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.RED, Color.GREEN,  Color.ORANGE, Color.GRAY, Color.LIGHT_GRAY};// new Color(0x0E12F2), new Color(0xF2F20E), new Color(0x800EF2), new Color(0x19f904)};
+	private static int maxRecursion = 7;
+	//private static double squareLenght = 200;
+	private static int operationCount = 0;
+	private static Color[] colors;//= new Color[maxRecursion];// = {Color.BLACK, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.RED, Color.GREEN,  Color.ORANGE, Color.GRAY, Color.LIGHT_GRAY};// new Color(0x0E12F2), new Color(0xF2F20E), new Color(0x800EF2), new Color(0x19f904)};
+	private boolean first=true;
 	
 	private void drawSquare(Graphics g, Point2D pointA, int level, double lenght) {
 		Graphics2D g2D= (Graphics2D) g.create();
@@ -29,21 +32,26 @@ public class SierpinskiCarpetPanel extends Panel {
 		path.lineTo(pointA.getX(), pointA.getY());
 		
 		g2D.setColor(Color.BLACK);
-        g2D.draw(path);
-		g2D.setColor(colors[level-1%colors.length]);
+//        g2D.draw(path);
+//        if(level>colors.length) {
+//        	Color temp = new Color((int)(Math.random() * 0x1000000));
+//        	g2D.setColor(temp);
+//        	} else 
+        g2D.setColor(colors[level%colors.length]);
 		g2D.fill(path);
+        operationCount++;
 	}
 	
 	private void drawRecursively(Graphics g, Point2D pointA, int level, double lenght) {
 
 		drawSquare(g, pointA, level, lenght);
-		if(level==1||lenght<1) { return;}
+		if(level==0||lenght<0.1) return;
 		
 		Point2D pointA1 = new Point2D.Double(pointA.getX()-(2.0/3.0)*lenght, pointA.getY()-(2.0/3.0)*lenght);	//top-left
 		Point2D pointA2 = new Point2D.Double(pointA.getX()+(1.0/3.0)*lenght, pointA.getY()-(2.0/3.0)*lenght);	//top-mid
 		Point2D pointA3 = new Point2D.Double(pointA.getX()+(4.0/3.0)*lenght, pointA.getY()-(2.0/3.0)*lenght);	//top-right
 		Point2D pointA4 = new Point2D.Double(pointA.getX()+(4.0/3.0)*lenght, pointA.getY()+(1.0/3.0)*lenght);	//mid-right
-		Point2D pointA5 = new Point2D.Double(pointA.getX()+((4.0/3.0)*lenght), pointA.getY()+(4.0/3.0)*lenght);	//low-right
+		Point2D pointA5 = new Point2D.Double(pointA.getX()+(4.0/3.0)*lenght, pointA.getY()+(4.0/3.0)*lenght);	//low-right
 		Point2D pointA6 = new Point2D.Double(pointA.getX()+(1.0/3.0)*lenght, pointA.getY()+(4.0/3.0)*lenght);	//low-mid
 		Point2D pointA7 = new Point2D.Double(pointA.getX()-(2.0/3.0)*lenght, pointA.getY()+(4.0/3.0)*lenght);	//low-left
 		Point2D pointA8 = new Point2D.Double(pointA.getX()-(2.0/3.0)*lenght, pointA.getY()+(1.0/3.0)*lenght);	//mid-left
@@ -69,15 +77,37 @@ public class SierpinskiCarpetPanel extends Panel {
 	}
 	
 	public void paint(Graphics g) {
-		//Background
+		
+		
+		if(first==true) {
+			initializeColors(maxRecursion);
+			first=false;
+		}
+		
+		//Background	
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		
-		
+
 		//first Point
-		Point2D pointA = new Point2D.Double(this.getWidth()/2-squareLenght/2 , this.getHeight()/2-squareLenght/2 );
+		int squareLenght;
 		if(this.getHeight()<this.getWidth()) squareLenght=this.getHeight()/3;
 		else squareLenght=this.getWidth()/3;
+		Point2D pointA = new Point2D.Double(this.getWidth()/2-squareLenght/2 , this.getHeight()/2-squareLenght/2 );
 		drawRecursively(g, pointA, maxRecursion, squareLenght);
+		//System.out.println(operationCount);operationCount=0;
+		
+		
+		
+	}
+	
+	public void initializeColors(int maxRecursion) {
+		
+		colors=new Color[maxRecursion];
+		for(int i=0; i<maxRecursion; i++) {
+			colors[i]= new Color((int)(Math.random() * 0x1000000));
+			//System.out.println(colors[i]);
+		}
+		
+		
 	}
 }

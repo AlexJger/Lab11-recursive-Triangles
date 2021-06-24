@@ -17,10 +17,10 @@ public class SierpinskiTriangle {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(434, 400)); //Symmetrical
 		
-//		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-//		frame.setSize(screensize.width, screensize.height);		
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//frame.setUndecorated(true);
+		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setSize(screensize.width, screensize.height);
+//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		frame.setUndecorated(true);
 	}
 
 	private static void makeTriangles() {
